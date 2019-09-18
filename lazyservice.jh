@@ -1,0 +1,43 @@
+entity Client {
+	name String required unique minlength(3) maxlength(160)
+}
+entity History {
+	startDt Instant
+    endDt Instant
+    riskPower Integer
+}
+entity Address {
+	city String
+	street String
+    house String
+}
+entity Product {
+	code String required minlength(3) maxlength(20) unique
+    name String required unique
+    startDt Instant
+    endDt Instant
+}
+entity ProductHistory {
+	operationDt Instant required 
+    opertationType OperationType required
+    sum BigDecimal
+}
+enum OperationType {
+	PUT, TAKE
+}
+relationship OneToMany {
+    Client{product} to Product
+    Client{history} to History
+} 
+relationship ManyToOne {
+	Client{address} to Address
+}
+relationship OneToMany {
+	Product{history} to ProductHistory
+}
+paginate Client, Product with infinite-scroll
+paginate History, ProductHistory with pagination
+
+dto * with mapstruct
+
+service all with serviceImpl
